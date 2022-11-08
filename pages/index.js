@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { CSSReset } from "../src/components/CSSReset";
 import Menu from "../src/components/Menu";
 import { StyledTimeline } from "../src/components/Timeline";
+import { StyledFavorites } from "../src/components/Favorites";
 
 function HomePage() {
 
@@ -68,9 +69,9 @@ function Timeline(props) {
 
     return (
         <StyledTimeline>
-            {playlistsNames.map((playlistName) => {
-                const videos = props.playlists[playlistName];
-                return (
+        {playlistsNames.map((playlistName) => {
+            const videos = props.playlists[playlistName];
+            return (
                     <section>
                         <h2>
                             {playlistName}
@@ -91,7 +92,7 @@ function Timeline(props) {
                     </section>
                 )
             })}
-        </StyledTimeline>
+            </StyledTimeline>
     )
 }
 
@@ -99,6 +100,7 @@ function Favorites(props) {
     const favoritesAccounts = Object.keys(props.favorites)
 
     return(
+        <StyledFavorites>
         <div>{
             favoritesAccounts.map((favoriteAccount) => {
                 const accounts = props.favorites[favoriteAccount];
@@ -107,7 +109,7 @@ function Favorites(props) {
                         <h2>
                             {favoriteAccount}
                         </h2>
-                        <div>
+                        <div className="account">
                             {accounts.map((account) => {
                                 return (
                                     <a href={`https://github.com/${account.perfil}`}>
@@ -123,5 +125,6 @@ function Favorites(props) {
                 )
             })}
         </div>
+        </StyledFavorites>
     )
 }
