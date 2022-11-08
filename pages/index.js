@@ -6,8 +6,6 @@ import { StyledTimeline } from "../src/components/Timeline";
 
 function HomePage() {
 
-    // console.log(config.playlists);
-
     return (
         <>
             <CSSReset />
@@ -15,6 +13,7 @@ function HomePage() {
                 <Menu />
                 <Header />
                 <Timeline playlists={config.playlists} />
+                <Favorites favorites={config.favorites} />
             </div>
         </>
     )
@@ -22,25 +21,24 @@ function HomePage() {
 
 export default HomePage
 
-// function Menu() {
-//     return (
-//         <div>
-//             Menu
-//         </div>
-//     )
-// }
-
 const StyledHeader = styled.div`
-    img {
-        width: 160px;
-        height: 160px;
+    .banner {
+        height: 300px;
+        object-fit: cover;
+        object-position: 0 45%;
+        width: 100%;
+    }
+
+    .img-user {
         border-radius: 50%;
+        height: 160px;
+        width: 160px;
     }
     .info-user {
-        margin-top: 50px;
         align-items: center;
         display: flex;
         gap: 16px;
+        margin-top: 20px;
         padding: 16px 32px;
         width: 100%;
     }
@@ -49,9 +47,9 @@ const StyledHeader = styled.div`
 function Header() {
     return (
         <StyledHeader>
-            {/* <img src="banner" /> */}
+            <img className="banner" src={`${config.banner}.png`} />
             <section className="info-user">
-                <img src={`https://github.com/${config.github}.png`} />
+                <img className="img-user" src={`https://github.com/${config.github}.png`} />
                 <div>
                     <h2>
                         {config.name}
@@ -94,5 +92,36 @@ function Timeline(props) {
                 )
             })}
         </StyledTimeline>
+    )
+}
+
+function Favorites(props) {
+    const favoritesAccounts = Object.keys(props.favorites)
+
+    return(
+        <div>{
+            favoritesAccounts.map((favoriteAccount) => {
+                const accounts = props.favorites[favoriteAccount];
+                return(
+                    <section>
+                        <h2>
+                            {favoriteAccount}
+                        </h2>
+                        <div>
+                            {accounts.map((account) => {
+                                return (
+                                    <a href={`https://github.com/${account.perfil}`}>
+                                        <img src={`https://github.com/${account.perfil}.png`} />
+                                        <span>
+                                            {account.perfil}
+                                        </span>
+                                    </a>
+                                )
+                            })}
+                        </div>
+                    </section>
+                )
+            })}
+        </div>
     )
 }
