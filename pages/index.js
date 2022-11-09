@@ -4,16 +4,19 @@ import { CSSReset } from "../src/components/CSSReset";
 import Menu from "../src/components/Menu";
 import { StyledTimeline } from "../src/components/Timeline";
 import { StyledFavorites } from "../src/components/Favorites";
+import React from "react";
 
 function HomePage() {
+
+    const [valorDoFiltro, setValorDoFiltro] = React.useState("");
 
     return (
         <>
             <CSSReset />
             <div>
-                <Menu />
+                <Menu valorDoFiltro={valorDoFiltro} setValorDoFiltro={setValorDoFiltro} />
                 <Header />
-                <Timeline playlists={config.playlists} />
+                <Timeline valorDoFiltro={valorDoFiltro} playlists={config.playlists} />
                 <Favorites favorites={config.favorites} />
             </div>
         </>
@@ -24,7 +27,7 @@ export default HomePage
 
 const StyledHeader = styled.div`
     .banner {
-        height: 300px;
+        height: 230px;
         object-fit: cover;
         object-position: 0 45%;
         width: 100%;
@@ -39,7 +42,7 @@ const StyledHeader = styled.div`
         align-items: center;
         display: flex;
         gap: 16px;
-        margin-top: 20px;
+        margin-top: 10px;
         padding: 16px 32px;
         width: 100%;
     }
@@ -64,22 +67,26 @@ function Header() {
     )
 }
 
-function Timeline(props) {
+function Timeline({ valorDoFiltro, ...props }) {
     const playlistsNames = Object.keys(props.playlists)
 
     return (
         <StyledTimeline>
-        {playlistsNames.map((playlistName) => {
-            const videos = props.playlists[playlistName];
-            return (
-                    <section>
+            {playlistsNames.map((playlistName) => {
+                const videos = props.playlists[playlistName];
+                return (
+                    <section key={playlistName}>
                         <h2>
                             {playlistName}
                         </h2>
                         <div>
-                            {videos.map((video) => {
+                            {videos.filter((video) => {
+                                const titleNormalizado = video.title.toLowerCase()
+                                const valorDoFiltroNormalizado = valorDoFiltro.toLowerCase()
+                                return titleNormalizado.includes(valorDoFiltroNormalizado)
+                            }).map((video) => {
                                 return (
-                                    <a href={video.url}>
+                                    <a key={video.url} href={video.url}>
                                         <img src={video.thumb} />
                                         <span>
                                             {video.title}
@@ -92,39 +99,39 @@ function Timeline(props) {
                     </section>
                 )
             })}
-            </StyledTimeline>
+        </StyledTimeline>
     )
 }
 
 function Favorites(props) {
     const favoritesAccounts = Object.keys(props.favorites)
 
-    return(
+    return (
         <StyledFavorites>
-        <div>{
-            favoritesAccounts.map((favoriteAccount) => {
-                const accounts = props.favorites[favoriteAccount];
-                return(
-                    <section>
-                        <h2>
-                            {favoriteAccount}
-                        </h2>
-                        <div className="account">
-                            {accounts.map((account) => {
-                                return (
-                                    <a href={`https://github.com/${account.perfil}`}>
-                                        <img src={`https://github.com/${account.perfil}.png`} />
-                                        <span>
-                                            {account.perfil}
-                                        </span>
-                                    </a>
-                                )
-                            })}
-                        </div>
-                    </section>
-                )
-            })}
-        </div>
+            <div>{
+                favoritesAccounts.map((favoriteAccount) => {
+                    const accounts = props.favorites[favoriteAccount];
+                    return (
+                        <section>
+                            <h2>
+                                {favoriteAccount}
+                            </h2>
+                            <div className="account">
+                                {accounts.map((account) => {
+                                    return (
+                                        <a href={`https://github.com/${account.perfil}`}>
+                                            <img src={`https://github.com/${account.perfil}.png`} />
+                                            <span>
+                                                {account.perfil}
+                                            </span>
+                                        </a>
+                                    )
+                                })}
+                            </div>
+                        </section>
+                    )
+                })}
+            </div>
         </StyledFavorites>
     )
 }
